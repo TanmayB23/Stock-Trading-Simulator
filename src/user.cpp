@@ -1,9 +1,10 @@
 #include "user.h"
+#include "stock.h"
 #include <iostream>
 
 using namespace std;
 
-User::User(const string &uname) : username(uname), balance(0.0) {}
+User::User(const string &uname) : username(uname), balance(1000000.0) {}
 
 void User::deposit(double amount) {
     balance += amount;
@@ -58,9 +59,17 @@ void User::displayPortfolio() {
 
 double User::calculateTotalPortfolioValue() {
     double totalValue = 0.0;
+
     for (auto &stock : portfolio) {
-        // Assume latest prices have been updated
-        totalValue += stock.second * 100; // Replace with actual stock price from API
+        const string &stockSymbol = stock.first;
+        int quantity = stock.second;            
+
+        Stock stockObj(stockSymbol); 
+        stockObj.updatePrice();                    
+        double latestPrice = stockObj.price;    
+
+        totalValue += quantity * latestPrice;
     }
+
     return totalValue;
 }

@@ -83,7 +83,7 @@ int main() {
                         } else {
                             db.updateUserBalance(username, currentBalance - totalCost);
                             user.buyStock(stockSymbol, quantity, totalCost);
-                            cout << "Bought " << quantity << " shares of " << stockSymbol << " at $" << price << " each.\n";
+                            cout << "Bought " << quantity << " shares of " << stockSymbol << " at ₹" << price << " each.\n";
                         }
                         break;
                     }
