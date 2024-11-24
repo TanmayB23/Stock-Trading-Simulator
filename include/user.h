@@ -7,15 +7,15 @@ using namespace std;
 
 class User {
 public:
-    std::string username;
+    string username;
     double balance;
-    std::map<std::string, int> portfolio;
+    map<string, int> portfolio;
 
-    User(const std::string &uname);
+    User(const string &uname);
     void deposit(double amount);
     void withdraw(double amount);
-    bool buyStock(const std::string &stockSymbol, int quantity, double price);
-    bool sellStock(const std::string &stockSymbol, int quantity, double price);
+    bool buyStock(const string &stockSymbol, int quantity, double price);
+    bool sellStock(const string &stockSymbol, int quantity, double price);
     void displayPortfolio();
     double calculateTotalPortfolioValue();
 };
