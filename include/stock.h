@@ -1,14 +1,14 @@
 #ifndef STOCK_H
 #define STOCK_H
-
 #include <string>
+using namespace std;
 
 class Stock {
 public:
-    std::string symbol;
+    string symbol;
     double price;
 
-    Stock(const std::string &symb);
+    Stock(const string &symb);
     void updatePrice();  // Function to update stock price from API
 };
 

@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+
+    long long t;
+    cin>>t;
+    while(t--){
+        long long n,q;
+        cin>>n>>q;
+        vector<long long>v(n);
+        vector<long long>u(q);
+        for(long long i=0;i<n;i++){
+            long long x;
+            cin>>x;
+            v[i]=x;
+        }
+        for(long long i=0;i<q;i++){
+            long long x;
+            cin>>x;
+            u[i]=x;
+        }
+        vector<long long>ans(q,0);
+        map<long long,long long>mp;
+        for(long long i=1;i<n;i++){
+            long long points = v[i]-v[i-1]-1;
+            if(points>0){
+                mp[i*(n-i)]+=(v[i]-v[i-1]-1);
+            }
+        }
+        for(long long i=0;i<n;i++){
+            mp[(n-i)*i + (n-1-i)]++;
+        }
+        for(long long i=0;i<q;i++){
+            if(mp.find(u[i])!=mp.end()){
+                cout<<mp[u[i]]<<" ";
+            }
+            else{
+                cout<<0<<" ";
+            }
+        }
+        cout<<endl;
+    }
+
+    return 0;
+}
