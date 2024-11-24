@@ -13,7 +13,8 @@ void showMenu() {
     cout << "3. Buy Stock\n";
     cout << "4. Sell Stock\n";
     cout << "5. Check Balance\n";
-    cout << "6. Exit\n";
+    cout << "6. Show Portfolio\n";
+    cout << "7. Exit\n";
 }
 
 int main() {
@@ -36,7 +37,7 @@ int main() {
             User user(username);
             int option = 0;
 
-            while (option != 6) {
+            while (option != 7) {
                 showMenu();
                 cin >> option;
 
@@ -47,7 +48,7 @@ int main() {
                         cin >> depositAmount;
                         double currentBalance = db.getUserBalance(username);
                         db.updateUserBalance(username, currentBalance + depositAmount);
-                        cout << "Deposit successful! New balance: $" << db.getUserBalance(username) << "\n";
+                        cout << "Deposit successful! New balance: ₹" << db.getUserBalance(username) << "\n";
                         break;
                     }
                     case 2: {
@@ -59,12 +60,11 @@ int main() {
                             cout << "Insufficient balance!\n";
                         } else {
                             db.updateUserBalance(username, currentBalance - withdrawAmount);
-                            cout << "Withdrawal successful! New balance: $" << db.getUserBalance(username) << "\n";
+                            cout << "Withdrawal successful! New balance: ₹" << db.getUserBalance(username) << "\n";
                         }
                         break;
                     }
                     case 3: {
-                        // Buy stock
                         string stockSymbol;
                         int quantity;
                         cout << "Enter stock symbol: ";
@@ -83,12 +83,12 @@ int main() {
                         } else {
                             db.updateUserBalance(username, currentBalance - totalCost);
                             user.buyStock(stockSymbol, quantity, totalCost);
+                            db.updatePortfolio(username, stockSymbol, quantity);
                             cout << "Bought " << quantity << " shares of " << stockSymbol << " at ₹" << price << " each.\n";
                         }
                         break;
                     }
                     case 4: {
-                        // Sell stock
                         string stockSymbol;
                         int quantity;
                         cout << "Enter stock symbol: ";
@@ -104,17 +104,26 @@ int main() {
                         if (user.sellStock(stockSymbol, quantity, totalEarnings)) {
                             double currentBalance = db.getUserBalance(username);
                             db.updateUserBalance(username, currentBalance + totalEarnings);
-                            cout << "Sold " << quantity << " shares of " << stockSymbol << " at $" << price << " each.\n";
+                            db.updatePortfolio(username, stockSymbol, -quantity);
+                            cout << "Sold " << quantity << " shares of " << stockSymbol << " at ₹" << price << " each.\n";
                         } else {
                             cout << "You don't have enough shares to sell.\n";
                         }
                         break;
                     }
                     case 5: {
-                        cout << "Your current balance: $" << db.getUserBalance(username) << "\n";
+                        cout << "Your current balance: ₹" << db.getUserBalance(username) << "\n";
                         break;
                     }
-                    case 6:
+                    case 6: {
+                        map<string, int> portfolio = db.getPortfolio(username);
+                        cout << "Your portfolio:\n";
+                        for (const auto &entry : portfolio) {
+                            cout << entry.first << ": " << entry.second << " shares\n";
+                        }
+                        break;
+                    }
+                    case 7:
                         cout << "Exiting...\n";
                         break;
                     default:
