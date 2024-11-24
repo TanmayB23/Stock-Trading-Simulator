@@ -22,11 +22,12 @@ Database::Database(const string &db_name) : db_name(db_name) {
 
         // SQL to create 'portfolio' table
         const char *sql_portfolio = "CREATE TABLE IF NOT EXISTS portfolio ("
-                                    "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                                    "username TEXT NOT NULL, "
-                                    "stock_name TEXT NOT NULL, "
-                                    "quantity INTEGER NOT NULL, "
-                                    "FOREIGN KEY(username) REFERENCES users(username));";
+                            "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                            "username TEXT NOT NULL, "
+                            "stock_name TEXT NOT NULL, "
+                            "quantity INTEGER NOT NULL, "
+                            "price REAL NOT NULL, " // Adding price column
+                            "FOREIGN KEY(username) REFERENCES users(username));";
 
         // Execute table creation queries
         char *errMsg = nullptr;
@@ -159,7 +160,7 @@ void Database::updateUserBalance(const string &username, double balance) {
     sqlite3_close(db);
 }
 
-void Database::updatePortfolio(const string &username, const string &stockName, int quantity) {
+void Database::updatePortfolio(const string &username, const string &stockName, int quantity, double price) {
     sqlite3 *db;
     sqlite3_open(db_name.c_str(), &db);
 
@@ -178,21 +179,23 @@ void Database::updatePortfolio(const string &username, const string &stockName, 
     sqlite3_finalize(stmt);
 
     if (count > 0) {
-        query = "UPDATE portfolio SET quantity = quantity + ? WHERE username = ? AND stock_name = ?;";
+        query = "UPDATE portfolio SET quantity = quantity + ?, price = ? WHERE username = ? AND stock_name = ?;";
     } else {
-        query = "INSERT INTO portfolio (username, stock_name, quantity) VALUES (?, ?, ?);";
+        query = "INSERT INTO portfolio (username, stock_name, quantity, price) VALUES (?, ?, ?, ?);";
     }
 
     rc = sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr);
     if (rc == SQLITE_OK) {
         if (count > 0) {
             sqlite3_bind_int(stmt, 1, quantity);
-            sqlite3_bind_text(stmt, 2, username.c_str(), -1, SQLITE_STATIC);
-            sqlite3_bind_text(stmt, 3, stockName.c_str(), -1, SQLITE_STATIC);
+            sqlite3_bind_double(stmt, 2, price);
+            sqlite3_bind_text(stmt, 3, username.c_str(), -1, SQLITE_STATIC);
+            sqlite3_bind_text(stmt, 4, stockName.c_str(), -1, SQLITE_STATIC);
         } else {
             sqlite3_bind_text(stmt, 1, username.c_str(), -1, SQLITE_STATIC);
             sqlite3_bind_text(stmt, 2, stockName.c_str(), -1, SQLITE_STATIC);
             sqlite3_bind_int(stmt, 3, quantity);
+            sqlite3_bind_double(stmt, 4, price);
         }
         sqlite3_step(stmt);
     }

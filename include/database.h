@@ -14,7 +14,7 @@ public:
     bool verifyLogin(const string &username, const string &password);
     double getUserBalance(const string &username);
     void updateUserBalance(const string &username, double balance);
-    void updatePortfolio(const string &username, const string &stockName, int quantity);
+    void updatePortfolio(const string &username, const string &stockName, int quantity, double price);
     map<string, int> getPortfolio(const string &username);
 
 private:

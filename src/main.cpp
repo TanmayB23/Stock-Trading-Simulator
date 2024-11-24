@@ -83,7 +83,7 @@ int main() {
                         } else {
                             db.updateUserBalance(username, currentBalance - totalCost);
                             user.buyStock(stockSymbol, quantity, totalCost);
-                            db.updatePortfolio(username, stockSymbol, quantity);
+                            db.updatePortfolio(username, stockSymbol, quantity,price);
                             cout << "Bought " << quantity << " shares of " << stockSymbol << " at ₹" << price << " each.\n";
                         }
                         break;
@@ -104,7 +104,7 @@ int main() {
                         if (user.sellStock(stockSymbol, quantity, totalEarnings)) {
                             double currentBalance = db.getUserBalance(username);
                             db.updateUserBalance(username, currentBalance + totalEarnings);
-                            db.updatePortfolio(username, stockSymbol, -quantity);
+                            db.updatePortfolio(username, stockSymbol, -quantity,price);
                             cout << "Sold " << quantity << " shares of " << stockSymbol << " at ₹" << price << " each.\n";
                         } else {
                             cout << "You don't have enough shares to sell.\n";
